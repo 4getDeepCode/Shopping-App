@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookeiParser = require('cookie-parser');
-const cors = require('cors')
+const cors = require('cors');
+const authRouter = require('./routes/auth/auth-routes');
+
 require('dotenv').config()
 
 const DB_URI = process.env.DB_URI;
@@ -33,6 +35,7 @@ app.use(
 
 app.use(cookeiParser());
 app.use(express.json());
+app.use("/api/auth", authRouter);
 
 app.listen(PORT, ()=> console.log(`server is running on port ${PORT}`)
 )
