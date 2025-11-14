@@ -22,16 +22,7 @@ function AuthLogin() {
     dispatch(loginUser(formData)).then((data) => {
       console.log(data)
 
-      // if (data?.payload?.success) {
-      //   toast({
-      //     title: data?.payload?.message,
-      //   });
-      // } else {
-      //   toast({
-      //     title: data?.payload?.message,
-      //     variant: "destructive",
-      //   });
-      // }
+
 
       if (data?.payload?.success) {
         toast.success(data?.payload?.message || "Login successful!");
