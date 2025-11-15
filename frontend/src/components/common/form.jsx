@@ -1,7 +1,15 @@
 import { Label } from '@radix-ui/react-label'
 import React from 'react'
 import { Button } from '../ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
 
@@ -44,7 +52,7 @@ function CommonForm({ formControls, formData, setFormData, onSubmit, buttonText,
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder={getControlItem.label} />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent >
                             {getControlItem.options && getControlItem.options.length > 0
                                 ? getControlItem.options.map((optionItem) => (
                                     <SelectItem key={optionItem.id} value={optionItem.id}>
