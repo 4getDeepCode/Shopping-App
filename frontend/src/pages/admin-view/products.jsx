@@ -24,12 +24,13 @@ function AdminProducts() {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  const [imageLoadingState, setImageLoadingState] = useState(false);
 
 
 
   function onSubmit(event) {
-    
- 
+
+
   }
   return (
     <Fragment>
@@ -45,21 +46,24 @@ function AdminProducts() {
         open={openCreateProductsDialog}
         onOpenChange={() => {
           setOpenCreateProductsDialog(false);
-        
+
         }}
       >
-        <SheetContent side="right" className="overflow-auto" aria-describedby={undefined}>
+        <SheetContent side="right" className="overflow-auto pl-2" aria-describedby={undefined}>
           <SheetHeader>
             <SheetTitle>
               Add New Product
             </SheetTitle>
           </SheetHeader>
           <ProductImageUpload
-          imageFile={imageFile}
-          setImageFile={setImageFile}
-          uploadedImageUrl={uploadedImageUrl}
-          setUploadedImageUrl={setUploadedImageUrl}
-      
+            imageFile={imageFile}
+            setImageFile={setImageFile}
+            uploadedImageUrl={uploadedImageUrl}
+            setUploadedImageUrl={setUploadedImageUrl}
+            setImageLoadingState={setImageLoadingState}
+            imageLoadingState={imageLoadingState}
+            // isEditMode={currentEditedId !== null}
+
           />
           <div className="py-6">
 
