@@ -98,11 +98,11 @@ function AdminProducts() {
       }
     });
   }
-
-  function isFormValid() {
+ function isFormValid() {
     return Object.keys(formData)
-      .filter((key) => key !== "averageReview")
-      .every((key) => formData[key] !== "");
+      .filter((currentKey) => currentKey !== "averageReview")
+      .map((key) => formData[key] !== "")
+      .every((item) => item);
   }
 
   useEffect(() => {
@@ -165,7 +165,7 @@ function AdminProducts() {
               setFormData={setFormData}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
               formControls={addProductFormElements}
-              // isBtnDisabled={!isFormValid()}
+              isBtnDisabled={!isFormValid()}
             />
           </div>
         </SheetContent>

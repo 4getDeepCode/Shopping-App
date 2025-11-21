@@ -3,13 +3,16 @@ import { Button } from '../ui/button'
 import { LogOut, TextAlignJustify } from 'lucide-react'
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/auth-slice';
+import { toast } from "sonner";
+
 
 function AdminHeader({setOpen}) {
   const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(logoutUser());
-  }
+  toast.success("Logged out successfully!");
+  dispatch(logoutUser());
+}
 
   return <header className="flex items-center justify-between px-4 py-3 bg-background border-b">
     <Button onClick={() => setOpen(true)} className="lg:hidden sm:block">
