@@ -103,10 +103,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="
-      
-      
-      
-      
+
       
       p-6 
     sm:p-10 

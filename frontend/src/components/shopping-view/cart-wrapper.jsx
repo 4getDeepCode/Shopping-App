@@ -9,42 +9,113 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const totalCartAmount =
     cartItems && cartItems.length > 0
       ? cartItems.reduce(
-          (sum, currentItem) =>
-            sum +
-            (currentItem?.salePrice > 0
-              ? currentItem?.salePrice
-              : currentItem?.price) *
-              currentItem?.quantity,
-          0
-        )
+        (sum, currentItem) =>
+          sum +
+          (currentItem?.salePrice > 0
+            ? currentItem?.salePrice
+            : currentItem?.price) *
+          currentItem?.quantity,
+        0
+      )
       : 0;
 
   return (
-    <SheetContent className="sm:max-w-md">
+
+
+
+
+
+    <SheetContent className="sm:max-w-md px-6 flex flex-col h-full">
       <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
+        <SheetTitle className="text-xl font-semibold">Your Cart</SheetTitle>
       </SheetHeader>
-      <div className="mt-8 space-y-4">
-        {cartItems && cartItems.length > 0
-          ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-          : null}
+
+      {/* Scrollable Cart Items */}
+      <div className="mt-6 flex-1 overflow-y-auto pr-1 custom-scrollbar space-y-4">
+        {cartItems && cartItems.length > 0 ? (
+          cartItems.map((item) => (
+            <UserCartItemsContent key={item._id} cartItem={item} />
+          ))
+        ) : (
+          <p className="text-center text-gray-400">Your cart is empty</p>
+        )}
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">${totalCartAmount}</span>
+
+      {/* Bottom fixed block */}
+      <div className="border-t mt-4 pt-4 bg-white">
+        <div className="flex justify-between font-bold text-lg mb-4">
+          <span>Total</span>
+          <span>${totalCartAmount}</span>
         </div>
+
+        <Button
+          onClick={() => {
+            navigate("/shop/checkout");
+            setOpenCartSheet(false);
+          }}
+          className="w-full py-5 text-lg rounded-xl mb-2"
+        >
+          Checkout
+        </Button>
       </div>
-      <Button
-        onClick={() => {
-          navigate("/shop/checkout");
-          setOpenCartSheet(false);
-        }}
-        className="w-full mt-6"
-      >
-        Checkout
-      </Button>
     </SheetContent>
+
+
+
+    //     <SheetContent className="sm:max-w-md px-6">
+    //   <SheetHeader>
+    //     <SheetTitle>Your Cart</SheetTitle>
+    //   </SheetHeader>
+
+    //   <div className="mt-8 space-y-4">
+    //     {cartItems && cartItems.length > 0
+    //       ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
+    //       : null}
+    //   </div>
+
+    //   <div className="mt-8 space-y-4">
+    //     <div className="flex justify-between">
+    //       <span className="font-bold">Total</span>
+    //       <span className="font-bold">${totalCartAmount}</span>
+    //     </div>
+    //   </div>
+
+    //   <Button
+    //     onClick={() => {
+    //       navigate("/shop/checkout");
+    //       setOpenCartSheet(false);
+    //     }}
+    //     className="w-full mt-6"
+    //   >
+    //     Checkout
+    //   </Button>
+    // </SheetContent>
+
+    // <SheetContent className="sm:max-w-md">
+    //   <SheetHeader>
+    //     <SheetTitle>Your Cart</SheetTitle>
+    //   </SheetHeader>
+    //   <div className="mt-8 space-y-4">
+    //     {cartItems && cartItems.length > 0
+    //       ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
+    //       : null}
+    //   </div>
+    //   <div className="mt-8 space-y-4">
+    //     <div className="flex justify-between">
+    //       <span className="font-bold">Total</span>
+    //       <span className="font-bold">${totalCartAmount}</span>
+    //     </div>
+    //   </div>
+    //   <Button
+    //     onClick={() => {
+    //       navigate("/shop/checkout");
+    //       setOpenCartSheet(false);
+    //     }}
+    //     className="w-full mt-6"
+    //   >
+    //     Checkout
+    //   </Button>
+    // </SheetContent>
   );
 }
 
