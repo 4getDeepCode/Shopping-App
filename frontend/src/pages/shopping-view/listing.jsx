@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { sortOptions } from '@/config';
+import { addToCart, fetchCartItems } from '@/store/shop/cart-slice';
 import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/products-slice';
 
 import { ArrowUpDownIcon } from 'lucide-react';
