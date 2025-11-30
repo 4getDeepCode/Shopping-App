@@ -4,106 +4,6 @@ const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
 const paypal = require("@paypal/checkout-server-sdk");
 
-// const createOrder = async (req, res) => {
-//   try {
-//     const {
-//       userId,
-//       cartItems,
-//       addressInfo,
-//       orderStatus,
-//       paymentMethod,
-//       paymentStatus,
-//       orderDate,
-//       orderUpdateDate,
-//       paymentId,
-//       payerId,
-//       cartId,
-//     } = req.body;
-
-//     if (!cartItems || cartItems.length === 0) {
-//       return res.status(400).json({ success: false, message: "Cart is empty" });
-//     }
-
-//     // Prepare items
-//     const items = cartItems.map((item) => ({
-//       name: item.title,
-//       unit_amount: {
-//         currency_code: "USD",
-//         value: item.price.toFixed(2),
-//       },
-//       quantity: item.quantity.toString(),
-//     }));
-
-//     // Calculate total of items
-//     const itemTotal = items.reduce(
-//       (sum, item) => sum + parseFloat(item.unit_amount.value) * parseInt(item.quantity),
-//       0
-//     );
-
-//     const request = new paypal.orders.OrdersCreateRequest();
-//     request.prefer("return=representation");
-//     request.requestBody({
-//       intent: "CAPTURE",
-//       purchase_units: [
-//         {
-//           amount: {
-//             currency_code: "USD",
-//             value: itemTotal.toFixed(2),
-//             breakdown: {
-//               item_total: {
-//                 currency_code: "USD",
-//                 value: itemTotal.toFixed(2),
-//               },
-//             },
-//           },
-//           items,
-//         },
-//       ],
-//       application_context: {
-//         return_url: "http://localhost:5174/shop/paypal-return",
-//         cancel_url: "http://localhost:5174/shop/paypal-cancel",
-//         user_action: "PAY_NOW",
-//       },
-//     });
-
-//     const paypalOrder = await paypalClient.execute(request);
-
-//     const newOrder = new Order({
-//       userId,
-//       cartId,
-//       cartItems,
-//       addressInfo,
-//       orderStatus: orderStatus || "pending",
-//       paymentMethod,
-//       paymentStatus: paymentStatus || "pending",
-//       totalAmount: itemTotal,
-//       orderDate: orderDate || new Date(),
-//       orderUpdateDate: orderUpdateDate || new Date(),
-//       paymentId,
-//       payerId,
-//     });
-
-//     await newOrder.save();
-
-//     const approvalURL = paypalOrder.result.links.find(
-//       (link) => link.rel === "approve"
-//     ).href;
-
-//     res.status(201).json({
-//       success: true,
-//       approvalURL,
-//       orderId: newOrder._id,
-//     });
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({
-//       success: false,
-//       message: "Error while creating PayPal order",
-//     });
-//   }
-// };
-
-
 const createOrder = async (req, res) => {
   try {
     const {
@@ -118,7 +18,7 @@ const createOrder = async (req, res) => {
       paymentId,
       payerId,
       cartId,
-      currency, // new optional field, e.g., "USD", "EUR", "INR"
+      currency, 
     } = req.body;
 
     if (!cartItems || cartItems.length === 0) {
@@ -164,8 +64,8 @@ const createOrder = async (req, res) => {
         },
       ],
       application_context: {
-        return_url: "http://localhost:5174/shop/paypal-return",
-        cancel_url: "http://localhost:5174/shop/paypal-cancel",
+        return_url:   `${process.env.CLIENT_BASE_URL}/shop/paypal-return`,
+        cancel_url: `${process.env.CLIENT_BASE_URL}/shop/paypal-cancel`,
         user_action: "PAY_NOW",
       },
     });
