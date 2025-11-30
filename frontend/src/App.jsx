@@ -19,14 +19,18 @@ import UnAuthPage from './pages/unauth-page'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuth } from './store/auth-slice'
 import { Skeleton } from './components/ui/skeleton'
+import PaypalReturnPage from './pages/shopping-view/paypal-return'
+import PaymentSuccessPage from './pages/shopping-view/payment-success'
+import SearchProducts from './pages/shopping-view/search'
+
 
 
 function App() {
 
-  const {user, isAuthenticated, isLoading} = useSelector((state) => state.auth);
+  const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-   useEffect(() => {
+  useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
 
@@ -37,6 +41,14 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
+
+        <Route path="/" element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+            ></CheckAuth>
+          }
+        />
 
         <Route path='/auth' element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
@@ -68,6 +80,9 @@ function App() {
           <Route path='listing' element={<ShoppingListing />} />
           <Route path='checkout' element={<ShoppingCheckout />} />
           <Route path='account' element={<ShoppingAccount />} />
+          <Route path="paypal-return" element={<PaypalReturnPage />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
 
         <Route path='*' element={<PageNotFound />} />
