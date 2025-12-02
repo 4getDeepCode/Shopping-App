@@ -11,6 +11,9 @@ import { logoutUser } from '@/store/auth-slice';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { fetchCartItems } from '@/store/shop/cart-slice';
 import UserCartWrapper from './cart-wrapper';
+import { logoutAndClearCart } from '@/store/actions/logout-actions';
+import Logo from "@/assets/logo/deep7.jpeg";
+
 
 function MenuItems() {
   const navigate = useNavigate();
@@ -38,7 +41,7 @@ function MenuItems() {
   }
 
   return (
-    <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
+    <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6  lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) =>
       (
         <Label
@@ -61,9 +64,15 @@ function HeaderRightContent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // function handleLogout() {
+  //   dispatch(logoutUser());
+  // }
+
+
   function handleLogout() {
-    dispatch(logoutUser());
+    dispatch(logoutAndClearCart());
   }
+
 
 
 
@@ -142,12 +151,24 @@ function ShoppingHeader() {
 
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
+    <header className="fixed top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/shop/home" className="flex items-center gap-2">
+
+        
+        {/* <Link to="/shop/home" className="flex items-center gap-2">
           <HousePlug className="h-6 w-6" />
-          <span className="font-bold">Ecommerce</span>
+          <span className="font-bold"> Deep MarketPlace </span>
+        </Link> */}
+
+        <Link to="/shop/home" className="flex items-center gap-2">
+          <img
+            src={Logo}
+            alt="Deep Marketplace Logo"
+            className="h-16 w-40 rounded-2xl object-contain"
+          />
+          {/* <span className="font-bold"> Deep MarketPlace </span> */}
         </Link>
+
 
         {/* MOBILE */}
         <Sheet open={openMobileMenu} onOpenChange={setOpenMobileMenu}>

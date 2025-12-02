@@ -1,6 +1,6 @@
 import ProductImageUpload from "@/components/admin-view/image-upload";
 import { Button } from "@/components/ui/button";
-import { addFeatureImage, getFeatureImages } from "@/store/common-slice";
+import { addFeatureImage, deleteFeatureImage, getFeatureImages } from "@/store/common-slice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,38 +27,90 @@ function AdminDashboard() {
   }, [dispatch]);
 
   return (
-    <div>
-      <ProductImageUpload
-        imageFile={imageFile}
-        setImageFile={setImageFile}
-        uploadedImageUrl={uploadedImageUrl}
-        setUploadedImageUrl={setUploadedImageUrl}
-        setImageLoadingState={setImageLoadingState}
-        imageLoadingState={imageLoadingState}
-        isCustomStyling={true}
-      />
+    // <div>
+    //   <ProductImageUpload
+    //     imageFile={imageFile}
+    //     setImageFile={setImageFile}
+    //     uploadedImageUrl={uploadedImageUrl}
+    //     setUploadedImageUrl={setUploadedImageUrl}
+    //     setImageLoadingState={setImageLoadingState}
+    //     imageLoadingState={imageLoadingState}
+    //     isCustomStyling={true}
+    //   />
 
-      <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
-        Upload
-      </Button>
+    //   <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
+    //     Upload
+    //   </Button>
 
-      <div className="flex flex-col gap-4 mt-5">
-        {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((featureImgItem, index) => (
-              <div className="relative" key={featureImgItem._id || index}>
-                {/* Only render image if it has a valid URL */}
-                {featureImgItem.image ? (
-                  <img
-                    src={featureImgItem.image}
-                    className="w-full object-contain rounded-lg"
-                  />
-                ) : null}
-              </div>
-            ))
-          : null}
-      </div>
+    //   <div className="flex flex-col gap-4 mt-5">
+    //     {featureImageList && featureImageList.length > 0
+    //       ? featureImageList.map((featureImgItem, index) => (
+    //           <div className="relative" key={featureImgItem._id || index}>
+    //             {/* Only render image if it has a valid URL */}
+    //             {featureImgItem.image ? (
+    //               <img
+    //                 src={featureImgItem.image}
+    //                 className="w-full object-contain rounded-lg"
+    //               />
+    //             ) : null}
+    //           </div>
+    //         ))
+    //       : null}
+    //   </div>
+    // </div>
+
+  <div>
+    <ProductImageUpload
+      imageFile={imageFile}
+      setImageFile={setImageFile}
+      uploadedImageUrl={uploadedImageUrl}
+      setUploadedImageUrl={setUploadedImageUrl}
+      setImageLoadingState={setImageLoadingState}
+      imageLoadingState={imageLoadingState}
+      isCustomStyling={true}
+    />
+
+    <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
+      Upload
+    </Button>
+
+    <div className="flex flex-col gap-4 mt-5">
+      {featureImageList && featureImageList.length > 0
+        ? featureImageList.map((featureImgItem, index) => (
+            <div
+              className="relative border rounded-lg p-2 flex flex-col gap-2"
+              key={featureImgItem._id || index}
+            >
+              {featureImgItem.image ? (
+                <img
+                  src={featureImgItem.image}
+                  className="w-full object-contain rounded-lg"
+                />
+              ) : null}
+
+              {/* DELETE BUTTON */}
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  dispatch(deleteFeatureImage(featureImgItem._id))
+                    .then(() => dispatch(getFeatureImages()));
+                }}
+              >
+                Delete Image
+              </Button>
+            </div>
+          ))
+        : null}
     </div>
+  </div>
+
+
   );
 }
 
 export default AdminDashboard;
+
+
+
+
+

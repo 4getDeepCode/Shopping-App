@@ -74,7 +74,19 @@ function ShoppingHome() {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
+
+
+
   function handleAddtoCart(getCurrentProductId) {
+
+
+if (!user) {
+    toast.error("Please login first!");
+    navigate("/auth/login", { state: { from: "/shop/listing" } }); 
+    return;
+  }
+
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -88,6 +100,10 @@ function ShoppingHome() {
       }
     });
   }
+
+
+
+
 
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
@@ -220,6 +236,8 @@ useEffect(() => {
                 ))
               : null}
           </div>
+
+
         </div>
       </section>
 

@@ -7,6 +7,7 @@ import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
@@ -21,6 +22,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
+  const navigate = useNavigate();
 
 
   function handleRatingChange(getRating) {
@@ -29,38 +31,95 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     setRating(getRating);
   }
 
+
+
+
+
+
+  // function handleAddToCart(getCurrentProductId, getTotalStock) {
+
+
+
+    
+
+  //   let getCartItems = cartItems.items || [];
+
+  //   if (getCartItems.length) {
+  //     const indexOfCurrentItem = getCartItems.findIndex(
+  //       (item) => item.productId === getCurrentProductId
+  //     );
+  //     if (indexOfCurrentItem > -1) {
+  //       const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+  //       if (getQuantity + 1 > getTotalStock) {
+  //         toast.error(`Only ${getQuantity} quantity can be added for this item`);
+
+
+  //         return;
+  //       }
+  //     }
+  //   }
+  //   dispatch(
+  //     addToCart({
+  //       userId: user?.id,
+  //       productId: getCurrentProductId,
+  //       quantity: 1,
+  //     })
+  //   ).then((data) => {
+  //     if (data?.payload?.success) {
+  //       dispatch(fetchCartItems(user?.id));
+  //       toast("Product is added to cart");
+
+  //     }
+  //   });
+  // }
+
+
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    let getCartItems = cartItems.items || [];
-
-    if (getCartItems.length) {
-      const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
-      );
-      if (indexOfCurrentItem > -1) {
-        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
-        if (getQuantity + 1 > getTotalStock) {
-          toast.error(`Only ${getQuantity} quantity can be added for this item`);
-
-
-          return;
-        }
-      }
-    }
-    dispatch(
-      addToCart({
-        userId: user?.id,
-        productId: getCurrentProductId,
-        quantity: 1,
-      })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchCartItems(user?.id));
-        toast("Product is added to cart");
-
-      }
-    });
+  // 🔹 If user not logged in, redirect to login
+  if (!user) {
+    toast.error("Please login first!");
+    navigate("/auth/login", { state: { from: "/shop/listing" } }); 
+    return;
   }
 
+  // Existing cart logic
+  let getCartItems = cartItems.items || [];
+
+  if (getCartItems.length) {
+    const indexOfCurrentItem = getCartItems.findIndex(
+      (item) => item.productId === getCurrentProductId
+    );
+    if (indexOfCurrentItem > -1) {
+      const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+      if (getQuantity + 1 > getTotalStock) {
+        toast.error(
+          `Only ${getQuantity} quantity can be added for this item`
+        );
+        return;
+      }
+    }
+  }
+
+  dispatch(
+    addToCart({
+      userId: user?.id,
+      productId: getCurrentProductId,
+      quantity: 1,
+    })
+  ).then((data) => {
+    if (data?.payload?.success) {
+      dispatch(fetchCartItems(user?.id));
+      toast("Product added to cart!");
+    }
+  });
+}
+
+
+
+
+
+
+  
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
@@ -89,10 +148,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   useEffect(() => {
+    // console.log(reviews, "reviews");
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
 
-  console.log(reviews, "reviews");
+  // console.log(reviews, "reviews");
 
   const averageReview =
     reviews && reviews.length > 0
