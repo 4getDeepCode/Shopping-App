@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
+import { X } from "lucide-react";
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
@@ -20,21 +21,28 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       : 0;
 
   return (
+    <SheetContent className="sm:max-w-md px-6 flex flex-col h-full bg-black/80 backdrop-blur-md rounded-xl shadow-xl">
+
+      <SheetClose asChild>
+        <button className=" absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/70 backdrop-blur-xl border border-yellow-400/70 text-yellow-300 shadow-[0_0_15px_rgba(255,255,0,0.6)] hover:bg-yellow-400 hover:text-black hover:shadow-[0_0_25px_rgba(255,255,0,1)] transition-all duration-300 " > <X size={22} /> </button>
+      </SheetClose>
 
 
-
-
-
-    <SheetContent className="sm:max-w-md px-6 flex flex-col h-full">
       <SheetHeader>
-        <SheetTitle className="text-xl font-semibold">Your Cart</SheetTitle>
+        <SheetTitle className="text-xl font-semibold text-yellow-400">
+          Your Cart
+        </SheetTitle>
       </SheetHeader>
 
       {/* Scrollable Cart Items */}
       <div className="mt-6 flex-1 overflow-y-auto pr-1 custom-scrollbar space-y-4">
         {cartItems && cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <UserCartItemsContent key={item._id} cartItem={item} />
+            <UserCartItemsContent
+              key={item._id}
+              cartItem={item}
+              className="bg-gray-900/60 hover:shadow-neon transition-shadow rounded-xl p-3"
+            />
           ))
         ) : (
           <p className="text-center text-gray-400">Your cart is empty</p>
@@ -42,10 +50,10 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       </div>
 
       {/* Bottom fixed block */}
-      <div className="border-t mt-4 pt-4 bg-white">
-        <div className="flex justify-between font-bold text-lg mb-4">
+      <div className="  mt-4 pt-4  rounded-b-xl">
+        <div className="flex justify-between font-bold text-lg mb-4 text-yellow-400">
           <span>Total</span>
-          <span>${totalCartAmount}</span>
+          <span>${totalCartAmount.toFixed(2)}</span>
         </div>
 
         <Button
@@ -53,69 +61,12 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
             navigate("/shop/checkout");
             setOpenCartSheet(false);
           }}
-          className="w-full py-5 text-lg rounded-xl mb-2"
+          className="w-full py-5 mb-4 text-lg rounded-xl bg-yellow-400 text-black hover:bg-yellow-500 transition-all"
         >
           Checkout
         </Button>
       </div>
     </SheetContent>
-
-
-
-    //     <SheetContent className="sm:max-w-md px-6">
-    //   <SheetHeader>
-    //     <SheetTitle>Your Cart</SheetTitle>
-    //   </SheetHeader>
-
-    //   <div className="mt-8 space-y-4">
-    //     {cartItems && cartItems.length > 0
-    //       ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-    //       : null}
-    //   </div>
-
-    //   <div className="mt-8 space-y-4">
-    //     <div className="flex justify-between">
-    //       <span className="font-bold">Total</span>
-    //       <span className="font-bold">${totalCartAmount}</span>
-    //     </div>
-    //   </div>
-
-    //   <Button
-    //     onClick={() => {
-    //       navigate("/shop/checkout");
-    //       setOpenCartSheet(false);
-    //     }}
-    //     className="w-full mt-6"
-    //   >
-    //     Checkout
-    //   </Button>
-    // </SheetContent>
-
-    // <SheetContent className="sm:max-w-md">
-    //   <SheetHeader>
-    //     <SheetTitle>Your Cart</SheetTitle>
-    //   </SheetHeader>
-    //   <div className="mt-8 space-y-4">
-    //     {cartItems && cartItems.length > 0
-    //       ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-    //       : null}
-    //   </div>
-    //   <div className="mt-8 space-y-4">
-    //     <div className="flex justify-between">
-    //       <span className="font-bold">Total</span>
-    //       <span className="font-bold">${totalCartAmount}</span>
-    //     </div>
-    //   </div>
-    //   <Button
-    //     onClick={() => {
-    //       navigate("/shop/checkout");
-    //       setOpenCartSheet(false);
-    //     }}
-    //     className="w-full mt-6"
-    //   >
-    //     Checkout
-    //   </Button>
-    // </SheetContent>
   );
 }
 

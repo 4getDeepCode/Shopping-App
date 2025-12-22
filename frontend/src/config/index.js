@@ -127,16 +127,17 @@ export const shoppingViewHeaderMenuItems = [
     label: "Kids",
     path: "/shop/listing",
   },
+   {
+    id: "accessories",
+    label: "Accessories",
+    path: "/shop/listing",
+  },
   {
     id: "footwear",
     label: "Footwear",
     path: "/shop/listing",
   },
-  {
-    id: "accessories",
-    label: "Accessories",
-    path: "/shop/listing",
-  },
+ 
   {
     id: "search",
     label: "Search",

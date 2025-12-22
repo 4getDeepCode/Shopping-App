@@ -1,66 +1,74 @@
-import CommonForm from '@/components/common/form'
-import { loginFormControls, } from '@/config'
-import { loginUser } from '@/store/auth-slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
+import { loginUser } from '@/store/auth-slice'
+import CommonForm from '@/components/common/form'
+import { loginFormControls } from '@/config'
+import { motion } from 'framer-motion'
 
 const initialState = {
   email: "",
   password: ""
 }
 
-function AuthLogin() {
+ function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
-
 
   function onSubmit(event) {
     event.preventDefault();
 
     dispatch(loginUser(formData)).then((data) => {
-      console.log(data)
-
-
-
       if (data?.payload?.success) {
         toast.success(data?.payload?.message || "Login successful!");
-
       } else {
         toast.error(data?.payload?.message || "Login failed!");
       }
-
-
-
-    })
+    });
   }
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="mx-auto w-full max-w-md space-y-8"
+    >
+      {/* Heading */}
+      <div className="text-center space-y-2">
+        <h1 className="text-4xl font-extrabold tracking-tight text-white drop-shadow">
           Sign in to your account
         </h1>
-        <p className="mt-2">
-          Don'n have an account
+        <p className="text-gray-300 text-sm">
+          Don't have an account?
           <Link
-            className="font-medium ml-2 text-primary hover:underline"
+            className="font-medium ml-2 text-yellow-400 hover:underline"
             to="/auth/register"
           >
             Register
           </Link>
         </p>
       </div>
-      <CommonForm
-        formControls={loginFormControls}
-        buttonText={"Sign In"}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={onSubmit}
-      />
-    </div>
+
+      {/* Form Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+      >
+        <CommonForm
+          formControls={loginFormControls}
+          buttonText={"Sign In"}
+          formData={formData}
+          setFormData={setFormData}
+          onSubmit={onSubmit}
+        />
+      </motion.div>
+    </motion.div>
   )
 }
 
 export default AuthLogin
+

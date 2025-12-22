@@ -1,91 +1,3 @@
-// import { useSelector } from "react-redux";
-// import { Badge } from "../ui/badge";
-// import { DialogContent } from "../ui/dialog";
-// import { Label } from "../ui/label";
-// import { Separator } from "../ui/separator";
-
-// function ShoppingOrderDetailsView({ orderDetails }) {
-//   const { user } = useSelector((state) => state.auth);
-
-//   return (
-//     <DialogContent className="sm:max-w-[600px]">
-//       <div className="grid gap-6">
-//         <div className="grid gap-2">
-//           <div className="flex mt-6 items-center justify-between">
-//             <p className="font-medium">Order ID</p>
-//             <Label>{orderDetails?._id}</Label>
-//           </div>
-//           <div className="flex mt-2 items-center justify-between">
-//             <p className="font-medium">Order Date</p>
-//             <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
-//           </div>
-//           <div className="flex mt-2 items-center justify-between">
-//             <p className="font-medium">Order Price</p>
-//             <Label>${orderDetails?.totalAmount}</Label>
-//           </div>
-//           <div className="flex mt-2 items-center justify-between">
-//             <p className="font-medium">Payment method</p>
-//             <Label>{orderDetails?.paymentMethod}</Label>
-//           </div>
-//           <div className="flex mt-2 items-center justify-between">
-//             <p className="font-medium">Payment Status</p>
-//             <Label>{orderDetails?.paymentStatus}</Label>
-//           </div>
-//           <div className="flex mt-2 items-center justify-between">
-//             <p className="font-medium">Order Status</p>
-//             <Label>
-//               <Badge
-//                 className={`py-1 px-3 ${orderDetails?.orderStatus === "confirmed"
-//                     ? "bg-green-500"
-//                     : orderDetails?.orderStatus === "rejected"
-//                       ? "bg-red-600"
-//                       : "bg-black"
-//                   }`}
-//               >
-//                 {orderDetails?.orderStatus}
-//               </Badge>
-//             </Label>
-//           </div>
-//         </div>
-//         <Separator />
-//         <div className="grid gap-4">
-//           <div className="grid gap-2">
-//             <div className="font-medium">Order Details</div>
-//             <ul className="grid gap-3">
-//               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
-//                 ? orderDetails?.cartItems.map((item) => (
-//                   <li className="flex items-center justify-between">
-//                     <span>Title: {item.title}</span>
-//                     <span>Quantity: {item.quantity}</span>
-//                     <span>Price: ${item.price}</span>
-//                   </li>
-//                 ))
-//                 : null}
-//             </ul>
-//           </div>
-//         </div>
-//         <div className="grid gap-4">
-//           <div className="grid gap-2">
-//             <div className="font-medium">Shipping Info</div>
-//             <div className="grid gap-0.5 text-muted-foreground">
-//               <span>{user.userName}</span>
-//               <span>{orderDetails?.addressInfo?.address}</span>
-//               <span>{orderDetails?.addressInfo?.city}</span>
-//               <span>{orderDetails?.addressInfo?.pincode}</span>
-//               <span>{orderDetails?.addressInfo?.phone}</span>
-//               <span>{orderDetails?.addressInfo?.notes}</span>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </DialogContent>
-//   );
-// }
-
-// export default ShoppingOrderDetailsView;
-
-
-
 import { useSelector } from "react-redux";
 import { Badge } from "../ui/badge";
 import { DialogContent } from "../ui/dialog";
@@ -96,85 +8,130 @@ function ShoppingOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <DialogContent className="max-w-xl p-6 sm:p-8 overflow-y-auto max-h-[90vh]">
+    <DialogContent
+      className="
+        max-w-xl
+        max-h-[90vh]
+        overflow-y-auto
+        p-6 sm:p-8
+        bg-gray-900
+        border border-gray-800
+        shadow-xl
+        text-gray-100
+      "
+    >
       <div className="space-y-6">
-        
-        {/* ORDER DETAILS TOP SECTION */}
+
+        {/* ORDER SUMMARY */}
         <div className="space-y-3">
           <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Order ID</p>
-            <Label className="text-sm break-all">{orderDetails?._id}</Label>
+            <p className="text-sm font-medium text-gray-400">Order ID</p>
+            <Label className="text-sm break-all text-gray-200">
+              {orderDetails?._id}
+            </Label>
           </div>
 
           <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Order Date</p>
-            <Label className="text-sm">
+            <p className="text-sm font-medium text-gray-400">Order Date</p>
+            <Label className="text-sm text-gray-200">
               {orderDetails?.orderDate.split("T")[0]}
             </Label>
           </div>
 
           <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Order Price</p>
-            <Label className="text-sm">${orderDetails?.totalAmount}</Label>
+            <p className="text-sm font-medium text-gray-400">Order Price</p>
+            <Label className="text-sm font-semibold text-gray-100">
+              ${orderDetails?.totalAmount}
+            </Label>
           </div>
 
           <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Payment Method</p>
-            <Label className="text-sm">{orderDetails?.paymentMethod}</Label>
+            <p className="text-sm font-medium text-gray-400">Payment Method</p>
+            <Label className="text-sm text-gray-200">
+              {orderDetails?.paymentMethod}
+            </Label>
           </div>
 
           <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Payment Status</p>
-            <Label className="text-sm">{orderDetails?.paymentStatus}</Label>
+            <p className="text-sm font-medium text-gray-400">Payment Status</p>
+            <Label className="text-sm text-gray-200">
+              {orderDetails?.paymentStatus}
+            </Label>
           </div>
 
-          <div className="flex justify-between">
-            <p className="font-semibold text-sm text-gray-600">Order Status</p>
+          <div className="flex justify-between items-center">
+            <p className="text-sm font-medium text-gray-400">Order Status</p>
             <Badge
-              className={`py-1 px-3 text-xs ${
-                orderDetails?.orderStatus === "confirmed"
-                  ? "bg-green-500"
-                  : orderDetails?.orderStatus === "rejected"
-                  ? "bg-red-600"
-                  : "bg-gray-900"
-              }`}
+              className={`px-3 py-1 text-xs font-semibold capitalize
+                ${
+                  orderDetails?.orderStatus === "delivered"
+                    ? "bg-green-500 text-black"
+                    : orderDetails?.orderStatus === "rejected"
+                    ? "bg-red-500 text-white"
+                    : orderDetails?.orderStatus === "confirmed"
+                    ? "bg-yellow-400 text-black"
+                    : "bg-gray-700 text-gray-200"
+                }
+              `}
             >
               {orderDetails?.orderStatus}
             </Badge>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="bg-gray-800" />
 
         {/* ORDER ITEMS */}
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-800">Order Items</h3>
-          <ul className="space-y-2">
+          <h3 className="text-sm font-semibold text-yellow-400">
+            Order Items
+          </h3>
+          <ul className="space-y-3">
             {orderDetails?.cartItems?.map((item) => (
               <li
                 key={item._id}
-                className="flex flex-col sm:flex-row sm:justify-between text-sm"
+                className="
+                  p-3
+                  rounded-lg
+                  border border-gray-800
+                  bg-gray-800/40
+                  flex flex-col sm:flex-row
+                  sm:items-center sm:justify-between
+                  text-sm
+                "
               >
-                <span className="font-medium">Title: {item.title}</span>
-                <span>Quantity: {item.quantity}</span>
-                <span>Price: ${item.price}</span>
+                <span className="font-medium text-gray-200">
+                  {item.title}
+                </span>
+                <span className="text-gray-400">
+                  Qty: {item.quantity}
+                </span>
+                <span className="font-semibold text-gray-100">
+                  ${item.price}
+                </span>
               </li>
             ))}
           </ul>
         </div>
 
-        <Separator />
+        <Separator className="bg-gray-800" />
 
         {/* SHIPPING INFO */}
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-800">Shipping Info</h3>
-          <div className="text-sm space-y-0.5 text-gray-600">
-            <p>{user.userName}</p>
+          <h3 className="text-sm font-semibold text-yellow-400">
+            Shipping Info
+          </h3>
+          <div className="text-sm space-y-1 text-gray-400">
+            <p className="text-gray-200 font-medium">{user.userName}</p>
             <p>{orderDetails?.addressInfo?.address}</p>
             <p>{orderDetails?.addressInfo?.city}</p>
             <p>{orderDetails?.addressInfo?.pincode}</p>
             <p>{orderDetails?.addressInfo?.phone}</p>
-            <p>{orderDetails?.addressInfo?.notes}</p>
+            {orderDetails?.addressInfo?.notes && (
+              <p className="italic text-gray-500">
+                {orderDetails?.addressInfo?.notes}
+              </p>
+            )}
           </div>
         </div>
 

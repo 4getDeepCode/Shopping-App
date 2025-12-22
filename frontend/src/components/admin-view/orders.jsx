@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -24,79 +25,96 @@ function AdminOrdersView() {
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
-  function handleFetchOrderDetails(getId) {
-    dispatch(getOrderDetailsForAdmin(getId));
+  function handleFetchOrderDetails(id) {
+    dispatch(getOrderDetailsForAdmin(id));
   }
 
   useEffect(() => {
     dispatch(getAllOrdersForAdmin());
   }, [dispatch]);
 
-  console.log(orderDetails, "orderList");
-
   useEffect(() => {
-    if (orderDetails !== null) setOpenDetailsDialog(true);
+    if (orderDetails) setOpenDetailsDialog(true);
   }, [orderDetails]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Orders</CardTitle>
+    <Card className="bg-gray-900 border border-gray-800 shadow-xl">
+      <CardHeader className="border-b border-gray-800">
+        <CardTitle className="text-yellow-400 text-xl font-bold">
+          All Orders
+        </CardTitle>
       </CardHeader>
-      <CardContent>
+
+      <CardContent className="p-0">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
-              <TableHead>
-                <span className="sr-only">Details</span>
-              </TableHead>
+            <TableRow className="border-b border-gray-800">
+              <TableHead className="text-gray-400">Order ID</TableHead>
+              <TableHead className="text-gray-400">Order Date</TableHead>
+              <TableHead className="text-gray-400">Status</TableHead>
+              <TableHead className="text-gray-400">Price</TableHead>
+              <TableHead />
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {orderList && orderList.length > 0
-              ? orderList.map((orderItem) => (
-                  <TableRow>
-                    <TableCell>{orderItem?._id}</TableCell>
-                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
-                        }`}
-                      >
-                        {orderItem?.orderStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
-                    <TableCell>
-                      <Dialog
-                        open={openDetailsDialog}
-                        onOpenChange={() => {
-                          setOpenDetailsDialog(false);
-                          dispatch(resetOrderDetails());
-                        }}
-                      >
-                        <Button
-                          onClick={() =>
-                            handleFetchOrderDetails(orderItem?._id)
-                          }
-                        >
-                          View Details
-                        </Button>
-                        <AdminOrderDetailsView orderDetails={orderDetails} />
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : null}
+            {orderList?.map((orderItem) => (
+              <TableRow
+                key={orderItem._id}
+                className="border-b border-gray-800 hover:bg-gray-800/50"
+              >
+                <TableCell className="text-gray-300 break-all">
+                  {orderItem._id}
+                </TableCell>
+
+                <TableCell className="text-gray-300">
+                  {orderItem.orderDate.split("T")[0]}
+                </TableCell>
+
+                <TableCell>
+                  <Badge
+                    className={`px-3 py-1 text-xs font-semibold ${
+                      orderItem.orderStatus === "confirmed"
+                        ? "bg-green-500 text-black"
+                        : orderItem.orderStatus === "rejected"
+                        ? "bg-red-600"
+                        : "bg-yellow-400 text-black"
+                    }`}
+                  >
+                    {orderItem.orderStatus}
+                  </Badge>
+                </TableCell>
+
+                <TableCell className="text-gray-300 font-medium">
+                  ${orderItem.totalAmount}
+                </TableCell>
+
+                <TableCell>
+                  <Dialog
+                    open={openDetailsDialog}
+                    onOpenChange={() => {
+                      setOpenDetailsDialog(false);
+                      dispatch(resetOrderDetails());
+                    }}
+                  >
+                    <Button
+                      size="sm"
+                      className="
+                        bg-yellow-400
+                        text-black
+                        hover:bg-yellow-500
+                        font-semibold
+                      "
+                      onClick={() => handleFetchOrderDetails(orderItem._id)}
+                    >
+                      View
+                    </Button>
+
+                    <AdminOrderDetailsView orderDetails={orderDetails} />
+                  </Dialog>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>

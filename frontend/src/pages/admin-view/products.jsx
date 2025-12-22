@@ -98,7 +98,7 @@ function AdminProducts() {
       }
     });
   }
- function isFormValid() {
+  function isFormValid() {
     return Object.keys(formData)
       .filter((currentKey) => currentKey !== "averageReview")
       .map((key) => formData[key] !== "")
@@ -113,24 +113,27 @@ function AdminProducts() {
 
   return (
     <Fragment>
-      <div className="mb-5 w-full flex justify-end">
-        <Button onClick={() => setOpenCreateProductsDialog(true)}>
-          Add New Product
+      <div className="mb-6 w-full flex justify-end ">
+        <Button
+          onClick={() => setOpenCreateProductsDialog(true)}
+          className="bg-yellow-400 text-black font-semibold px-5 py-2 rounded-lg hover:bg-yellow-500 shadow"
+        >
+          + Add New Product
         </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {productList?.length > 0
           ? productList.map((productItem) => (
-              <AdminProductTile
-                key={productItem._id || productItem.id}
-                product={productItem}
-                setFormData={setFormData}
-                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
-                setCurrentEditedId={setCurrentEditedId}
-                handleDelete={handleDelete}
-              />
-            ))
+            <AdminProductTile
+              key={productItem._id || productItem.id}
+              product={productItem}
+              setFormData={setFormData}
+              setOpenCreateProductsDialog={setOpenCreateProductsDialog}
+              setCurrentEditedId={setCurrentEditedId}
+              handleDelete={handleDelete}
+            />
+          ))
           : null}
       </div>
 
@@ -141,9 +144,9 @@ function AdminProducts() {
           setOpenCreateProductsDialog(isOpen);
         }}
       >
-        <SheetContent side="right" className="overflow-auto pl-2">
+        <SheetContent side="right" className="overflow-auto pl-2 bg-gray-900 border-r border-gray-800 text-yellow-400 ">
           <SheetHeader>
-            <SheetTitle>
+            <SheetTitle className="text-yellow-400">
               {currentEditedId !== null ? "Edit Product" : "Add New Product"}
             </SheetTitle>
           </SheetHeader>

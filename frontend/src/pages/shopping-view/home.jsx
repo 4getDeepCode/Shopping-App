@@ -1,49 +1,51 @@
 import { Button } from "@/components/ui/button";
-import {
-  Airplay,
-  BabyIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CloudLightning,
-  Heater,
-  Images,
-  Shirt,
-  ShirtIcon,
-  ShoppingBasket,
-  UmbrellaIcon,
-  WashingMachine,
-  WatchIcon,
-} from "lucide-react";
+
+import { ChevronLeftIcon, ChevronRightIcon, } from "lucide-react";
+
+import menImg from "../../assets/categories/men.png";
+import womenImg from "../../assets/categories/women.png";
+import kidsImg from "../../assets/categories/kids.png";
+import accessoriesImg from "../../assets/categories/accessories.png";
+import footwearImg from "../../assets/categories/footwear.png";
+
+import nikeImg from "../../assets/brands/nike.png";
+import adidasImg from "../../assets/brands/adidas.png";
+import pumaImg from "../../assets/brands/puma.png";
+import leviImg from "../../assets/brands/levi.png";
+import zaraImg from "../../assets/brands/zara.png";
+import hmImg from "../../assets/brands/hm.png";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllFilteredProducts,
-  fetchProductDetails,
-} from "@/store/shop/products-slice";
+import { fetchAllFilteredProducts, fetchProductDetails, } from "../../store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 import { toast } from "sonner";
+import Footer from "../../components/shopping-view/footer";
 
 
-const categoriesWithIcon = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightning },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
+
+const categoriesWithImage = [
+  { id: "men", label: "Men", image: menImg },
+  { id: "women", label: "Women", image: womenImg },
+  { id: "kids", label: "Kids", image: kidsImg },
+  { id: "accessories", label: "Accessories", image: accessoriesImg },
+  { id: "footwear", label: "Footwear", image: footwearImg },
 ];
 
-const brandsWithIcon = [
-  { id: "nike", label: "Nike", icon: Shirt },
-  { id: "adidas", label: "Adidas", icon: WashingMachine },
-  { id: "puma", label: "Puma", icon: ShoppingBasket },
-  { id: "levi", label: "Levi's", icon: Airplay },
-  { id: "zara", label: "Zara", icon: Images },
-  { id: "h&m", label: "H&M", icon: Heater },
+
+
+const brandsWithImage = [
+  { id: "nike", label: "Nike", image: nikeImg },
+  { id: "adidas", label: "Adidas", image: adidasImg },
+  { id: "puma", label: "Puma", image: pumaImg },
+  { id: "levi", label: "Levi's", image: leviImg },
+  { id: "zara", label: "Zara", image: zaraImg },
+  { id: "h&m", label: "H&M", image: hmImg },
 ];
 
 function ShoppingHome() {
@@ -54,7 +56,6 @@ function ShoppingHome() {
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -62,6 +63,7 @@ function ShoppingHome() {
 
   function handleNavigateToListingPage(getCurrentItem, section) {
     sessionStorage.removeItem("filters");
+
     const currentFilter = {
       [section]: [getCurrentItem.id],
     };
@@ -70,55 +72,45 @@ function ShoppingHome() {
     navigate(`/shop/listing`);
   }
 
-  function handleGetProductDetails(getCurrentProductId) {
-    dispatch(fetchProductDetails(getCurrentProductId));
+  function handleGetProductDetails(id) {
+    dispatch(fetchProductDetails(id));
   }
 
-
-
-
-  function handleAddtoCart(getCurrentProductId) {
-
-
-if (!user) {
-    toast.error("Please login first!");
-    navigate("/auth/login", { state: { from: "/shop/listing" } }); 
-    return;
-  }
-
+  function handleAddtoCart(productId) {
+    if (!user) {
+      toast.error("Please login first!");
+      navigate("/auth/login");
+      return;
+    }
 
     dispatch(
       addToCart({
         userId: user?.id,
-        productId: getCurrentProductId,
+        productId,
         quantity: 1,
       })
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast.success("Product is added to cart");
+        toast.success("Product added to cart");
       }
     });
   }
 
-
-
-
-
   useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
+    if (productDetails) setOpenDetailsDialog(true);
   }, [productDetails]);
 
-useEffect(() => {
-  if (featureImageList.length === 0) return;
-
-  const timer = setInterval(() => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
-  }, 3000); // recommended: 3 seconds
-
-  return () => clearInterval(timer);
-}, [featureImageList.length]);
-
+  // 🔥 Auto slider
+  useEffect(() => {
+    if (featureImageList.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrentSlide(
+        (prev) => (prev + 1) % featureImageList.length
+      );
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [featureImageList.length]);
 
   useEffect(() => {
     dispatch(
@@ -127,117 +119,196 @@ useEffect(() => {
         sortParams: "price-lowtohigh",
       })
     );
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen bg-black text-gray-200">
+
       <div className="relative w-full h-[600px] overflow-hidden">
+
+        {/* Slides */}
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
-              <img
-                src={slide?.image}
-                key={index}
-                className={`${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500`}
-              />
-            ))
+            <img
+              src={slide?.image}
+              key={index}
+              className={`${index === currentSlide ? "opacity-100" : "opacity-0"
+                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700`}
+            />
+          ))
           : null}
 
+        {/* Soft gradient overlay (fixes dark-mode visibility) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent pointer-events-none"></div>
+
+        {/* Left Arrow */}
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={() =>
             setCurrentSlide(
               (prevSlide) =>
-                (prevSlide - 1 + featureImageList.length) %
-                featureImageList.length
+                (prevSlide - 1 + featureImageList.length) % featureImageList.length
             )
           }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 left-4 -translate-y-1/2 
+               bg-white/50 dark:bg-white/20 hover:bg-white/70 dark:hover:bg-white/40
+               text-black dark:text-white backdrop-blur-md rounded-full shadow"
         >
-          <ChevronLeftIcon className="w-4 h-4" />
+          <ChevronLeftIcon className="w-6 h-6" />
         </Button>
 
+        {/* Right Arrow */}
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={() =>
             setCurrentSlide(
               (prevSlide) => (prevSlide + 1) % featureImageList.length
             )
           }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 right-4 -translate-y-1/2
+               bg-white/50 dark:bg-white/20 hover:bg-white/70 dark:hover:bg-white/40
+               text-black dark:text-white backdrop-blur-md rounded-full shadow"
         >
-          <ChevronRightIcon className="w-4 h-4" />
+          <ChevronRightIcon className="w-6 h-6" />
         </Button>
+
+        {/* Dots Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+          {featureImageList.map((_, index) => (
+            <div
+              key={index}
+              className={`w-3 h-3 rounded-full transition-all ${currentSlide === index
+                ? "bg-yellow-400 dark:bg-yellow-300 scale-110"
+                : "bg-gray-400 dark:bg-gray-200 opacity-70"
+                }`}
+            ></div>
+          ))}
+        </div>
       </div>
 
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Shop by category
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categoriesWithIcon.map((categoryItem) => (
-              <Card
-                onClick={() =>
-                  handleNavigateToListingPage(categoryItem, "category")
-                }
-                className="cursor-pointer hover:shadow-lg transition-shadow"
-              >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{categoryItem.label}</span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="py-12 bg-gray-50">
+      {/* 🌟 CATEGORY SECTION */}
+      <section className="py-14 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {brandsWithIcon.map((brandItem) => (
-              <Card
-                onClick={() => handleNavigateToListingPage(brandItem, "brand")}
-                className="cursor-pointer hover:shadow-lg transition-shadow"
-              >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{brandItem.label}</span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Feature Products
+          <h2 className="text-4xl font-extrabold text-center text-yellow-400 drop-shadow mb-10">
+            Shop by Category
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {productList && productList.length > 0
-              ? productList.map((productItem) => (
-                  <ShoppingProductTile
-                    handleGetProductDetails={handleGetProductDetails}
-                    product={productItem}
-                    handleAddtoCart={handleAddtoCart}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {categoriesWithImage.map((item) => {
+              return (
+
+                <Card
+                  key={item.id}
+                  onClick={() => handleNavigateToListingPage(item, "category")}
+                  className="group relative h-48 md:h-56 overflow-hidden rounded-xl cursor-pointer
+                   border border-gray-800 bg-black
+                   hover:border-yellow-500 hover:shadow-yellow-500/40 hover:shadow-xl transition"
+                >
+                  {/* Image */}
+                  <img
+                    src={item.image}
+                    alt={item.label}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover
+                     transition-transform duration-500 group-hover:scale-110"
                   />
-                ))
-              : null}
+
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t 
+                  from-black/80 via-black/40 to-transparent"></div>
+
+                  {/* Label */}
+                  <div className="absolute bottom-0 left-0 right-0 z-10 px-4 py-1">
+                    <div className="bg-black/60 backdrop-blur-md rounded-md text-center 
+                    border border-yellow-400/30">
+                      <span className="block text-lg font-extrabold text-yellow-400 tracking-wide">
+                        {item.label}
+                      </span>
+                    </div>
+                  </div>
+                </Card>
+
+
+              );
+
+            })}
           </div>
+        </div>
+      </section>
+
+      {/* 🌟 BRAND SECTION */}
+      <section className="py-14 bg-black">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-10">
+            Shop by Brand
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {brandsWithImage.map((item) => {
+
+              return (
+
+                <Card
+                  key={item.id}
+                  onClick={() => handleNavigateToListingPage(item, section)}
+                  className="group relative h-48 md:h-56 overflow-hidden rounded-xl cursor-pointer
+             border border-gray-800 bg-black
+             hover:border-yellow-500 hover:shadow-yellow-500/40 hover:shadow-xl transition"
+                >
+                  {/* Image */}
+                  <img
+                    src={item.image}
+                    alt={item.label}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover
+               transition-transform duration-500 group-hover:scale-110"
+                  />
+
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t 
+                  from-black/80 via-black/40 to-transparent"></div>
+
+                  {/* Bottom Highlighted Label */}
+                  <div className="absolute bottom-0 left-0 right-0 z-10 px-4 pb-1">
+                    <div className="bg-black/70 backdrop-blur-md rounded-md 
+                    border border-yellow-400/40 text-center ">
+                      <span className="text-lg font-extrabold text-yellow-400 tracking-wide">
+                        {item.label}
+                      </span>
+                    </div>
+                  </div>
+                </Card>
 
 
+              );
+
+
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 🌟 FEATURE PRODUCTS */}
+      <section className="py-14 bg-gradient-to-t from-black via-gray-900 to-black">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-10">
+            Featured Products
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {productList?.map((product) => (
+              <ShoppingProductTile
+                key={product._id}
+                product={product}
+                handleGetProductDetails={handleGetProductDetails}
+                handleAddtoCart={handleAddtoCart}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -246,7 +317,10 @@ useEffect(() => {
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
       />
+
+      <Footer />
     </div>
+    
   );
 }
 
