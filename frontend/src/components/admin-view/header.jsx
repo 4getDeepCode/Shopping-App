@@ -13,8 +13,11 @@ function AdminHeader({ setOpen }) {
 
   function handleLogout() {
     toast.success("Logged out successfully!");
-    dispatch(logoutAndClearCart());
     navigate("/");
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
+    dispatch(logoutAndClearCart());
+
   }
 
   return (

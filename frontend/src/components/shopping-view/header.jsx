@@ -31,6 +31,7 @@ import { fetchCartItems } from "@/store/shop/cart-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { logoutAndClearCart } from "@/store/actions/logout-actions";
 import Logo from "@/assets/logo/deep10.png";
+import { resetTokenAndCredentials } from "@/store/auth-slice";
 
 function MenuItems() {
   const navigate = useNavigate();
@@ -124,7 +125,10 @@ function HeaderRightContent() {
   const dispatch = useDispatch();
 
   function handleLogout() {
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
     dispatch(logoutAndClearCart());
+
   }
 
   useEffect(() => {
@@ -132,7 +136,7 @@ function HeaderRightContent() {
   }, [dispatch, user?.id]);
 
   return (
-   
+
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
 
       {/* CART */}
