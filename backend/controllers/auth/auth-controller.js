@@ -105,8 +105,8 @@ const logoutUser = (req, res) => {
     });
 };
 
+//Auth middleware
 
-//authMiddleware
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
