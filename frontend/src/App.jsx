@@ -17,7 +17,7 @@ import ShoppingLayout from './components/shopping-view/layout'
 import CheckAuth from './components/common/check-auth'
 import UnAuthPage from './pages/unauth-page'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkAuth } from './store/auth-slice'
+import { checkAuth, resetTokenAndCredentials } from './store/auth-slice'
 import { Skeleton } from './components/ui/skeleton'
 import PaypalReturnPage from './pages/shopping-view/paypal-return'
 import PaymentSuccessPage from './pages/shopping-view/payment-success'
@@ -37,10 +37,23 @@ function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const token = JSON.parse(sessionStorage.getItem('token'))
+  // useEffect(() => {
+  //   const token = JSON.parse(sessionStorage.getItem('token'))
+  //   dispatch(checkAuth(token));
+  // }, [dispatch]);
+
+
+useEffect(() => {
+  const token = JSON.parse(sessionStorage.getItem("token"));
+
+  if (token) {
     dispatch(checkAuth(token));
-  }, [dispatch]);
+  } else {
+    dispatch(resetTokenAndCredentials());
+  }
+}, [dispatch]);
+
+
 
   if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
 
