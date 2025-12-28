@@ -39,7 +39,7 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
         {cartItems && cartItems.length > 0 ? (
           cartItems.map((item) => (
             <UserCartItemsContent
-              key={item._id}
+              key={item.productId || item._id}
               cartItem={item}
               className="bg-gray-900/60 hover:shadow-neon transition-shadow rounded-xl p-3"
             />

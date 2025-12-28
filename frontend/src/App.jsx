@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, Outlet } from 'react-router-dom'
 import AuthLayout from './components/auth/layout'
 import AuthLogin from './pages/auth/login'
 import AuthRegister from './pages/auth/register'
@@ -17,7 +17,7 @@ import ShoppingLayout from './components/shopping-view/layout'
 import CheckAuth from './components/common/check-auth'
 import UnAuthPage from './pages/unauth-page'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkAuth, } from './store/auth-slice'
+import { checkAuth, resetTokenAndCredentials, } from './store/auth-slice'
 import { Skeleton } from './components/ui/skeleton'
 import PaypalReturnPage from './pages/shopping-view/paypal-return'
 import PaymentSuccessPage from './pages/shopping-view/payment-success'
@@ -25,21 +25,56 @@ import SearchProducts from './pages/shopping-view/search'
 
 
 // Simple protected route component
+// function ProtectedRoute({ isAuthenticated, children }) {
+//   // if not logged in, redirect to login (you can change to /unauth-page if you want)
+//   if (!isAuthenticated) {
+//     return <Navigate to="/auth/login" replace />
+//   }
+//   return children
+// }
+
+
 function ProtectedRoute({ isAuthenticated, children }) {
-  // if not logged in, redirect to login (you can change to /unauth-page if you want)
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace />
+  const { isLoading } = useSelector((state) => state.auth);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[300px]">
+        <span className="text-yellow-400 animate-pulse">
+          Checking session...
+        </span>
+      </div>
+    );
   }
-  return children
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  return children;
 }
+
+
+
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   const token = JSON.parse(sessionStorage.getItem('token'))
+  //   dispatch(checkAuth(token));
+  // }, [dispatch]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = JSON.parse(sessionStorage.getItem('token'))
-    dispatch(checkAuth(token));
+    const token = JSON.parse(sessionStorage.getItem("token"));
+    if (token) {
+      dispatch(checkAuth(token));
+    } else {
+      dispatch(resetTokenAndCredentials());
+    }
   }, [dispatch]);
 
 
@@ -84,11 +119,12 @@ function App() {
 
         {/* SHOP: layout is public (so browsing UI is accessible),
             but specific routes are protected */}
-        <Route path='/shop' element={
-          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-            <ShoppingLayout />
-          </CheckAuth>
-        }>
+        <Route path='/shop'
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <ShoppingLayout />
+            </CheckAuth>
+          }>
           {/* public pages: anyone can view */}
           <Route path='home' element={<ShoppingHome />} />
           <Route path='listing' element={<ShoppingListing />} />
@@ -125,19 +161,5 @@ function App() {
 }
 
 export default App
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

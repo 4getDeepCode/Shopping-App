@@ -8,7 +8,8 @@ import axios from "axios";
 // ------------------------------------------------------------
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
+  isLoading: false,
+  authChecked: false,
   user: null,
   token: null
 };
@@ -94,7 +95,10 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null
       state.token = null
+      state.authChecked = true;
+
     }
+
   },
   extraReducers: (builder) => {
     builder
@@ -106,6 +110,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.authChecked = true;
       })
       .addCase(registerUser.rejected, (state) => {
         state.isLoading = false;
@@ -119,7 +124,7 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-
+        state.authChecked = true;
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
@@ -130,22 +135,26 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
-        state.token = null
+        state.token = null;
+        state.authChecked = true;
       })
 
       // CHECK AUTH
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;
+        state.authChecked = false;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
+        state.authChecked = true;
       })
       .addCase(checkAuth.rejected, (state) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.authChecked = true;
       })
 
 
@@ -154,7 +163,9 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
+        state.token = null;
         state.isAuthenticated = false;
+        state.authChecked = true;
       });
   },
 });
